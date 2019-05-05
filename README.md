@@ -2,16 +2,15 @@
 A minimal repo to test scala xbt compilation errors
 
 When running a simple `mvn clean package` with 
+
+
+Gives an error...but *only* if Hello.scala is in a package. If it is under the scala folder (default package) this does not occur. For J9..
+
 ```
-Apache Maven 3.6.0 (97c98ec64a1fdfee7767ce5ffb20918da4f719f3; 2018-10-24T19:41:47+01:00)
 Maven home: /home/blah/tools/maven/apache-maven-3.6.0
-Java version: 1.8.0_212, vendor: AdoptOpenJDK, runtime: /home/blah/tools/java/jdk8u212-b03/jre
-Default locale: en_GB, platform encoding: UTF-8
-OS name: "linux", version: "4.18.0-18-generic", arch: "amd64", family: "unix"
+   Default locale: en_GB, platform encoding: UTF-8
+   OS name: "linux", version: "4.18.0-18-generic", arch: "amd64", family: "unix"
 ```
-
-Gives an error...but *only* if Hello.scala is in a package. If it is under the scala folder (default package) this does not occur.
-
 ```
  at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:184)
     at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:210)
@@ -135,4 +134,114 @@ Caused by: java.lang.IncompatibleClassChangeError: Class scala.reflect.internal.
     at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:415)
     at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:356)
 ```
+and Hotspot
 
+```
+Apache Maven 3.6.0 (97c98ec64a1fdfee7767ce5ffb20918da4f719f3; 2018-10-24T19:41:47+01:00)
+Maven home: /home/blah/tools/maven/apache-maven-3.6.0
+Java version: 1.8.0_212, vendor: AdoptOpenJDK, runtime: /home/blah/tools/java/jdk8u212-b03/jre
+Default locale: en_GB, platform encoding: UTF-8
+OS name: "linux", version: "4.18.0-18-generic", arch: "amd64", family: "unix"
+```
+
+```
+Caused by: java.lang.IncompatibleClassChangeError: Class scala.reflect.internal.Names$TypeName_R does not implement the requested interface java.lang.CharSequence
+    at java.lang.AbstractStringBuilder.append (AbstractStringBuilder.java:488)
+    at java.lang.StringBuilder.append (StringBuilder.java:166)
+    at xsbt.ClassName.$anonfun$classNameAsSeenIn$1 (ClassName.scala:83)
+    at scala.reflect.internal.SymbolTable.enteringPhase (SymbolTable.scala:235)
+    at xsbt.ClassName.classNameAsSeenIn (ClassName.scala:78)
+    at xsbt.ClassName.classNameAsSeenIn$ (ClassName.scala:76)
+    at xsbt.ExtractAPI.classNameAsSeenIn (ExtractAPI.scala:49)
+    at xsbt.ExtractAPI.mkClassLike (ExtractAPI.scala:666)
+    at xsbt.ExtractAPI.$anonfun$classLike$1 (ExtractAPI.scala:649)
+    at scala.collection.mutable.AbstractMap.getOrElseUpdate (Map.scala:80)
+    at xsbt.ExtractAPI.classLike (ExtractAPI.scala:649)
+    at xsbt.ExtractAPI.extractAllClassesOf (ExtractAPI.scala:634)
+    at xsbt.API$TopLevelHandler.class (API.scala:74)
+    at xsbt.API$TopLevelTraverser.traverse (API.scala:82)
+    at xsbt.API$TopLevelTraverser.traverse (API.scala:78)
+    at scala.reflect.api.Trees$Traverser.$anonfun$traverseStats$2 (Trees.scala:2498)
+    at scala.reflect.api.Trees$Traverser.atOwner (Trees.scala:2507)
+    at scala.reflect.api.Trees$Traverser.$anonfun$traverseStats$1 (Trees.scala:2498)
+    at scala.reflect.api.Trees$Traverser.traverseStats (Trees.scala:2497)
+    at scala.reflect.internal.Trees.itraverse (Trees.scala:1330)
+    at scala.reflect.internal.Trees.itraverse$ (Trees.scala:1204)
+    at scala.reflect.internal.SymbolTable.itraverse (SymbolTable.scala:16)
+    at scala.reflect.internal.SymbolTable.itraverse (SymbolTable.scala:16)
+    at scala.reflect.api.Trees$Traverser.traverse (Trees.scala:2475)
+    at xsbt.API$TopLevelTraverser.traverse (API.scala:84)
+    at xsbt.API$TopLevelTraverser.traverse (API.scala:78)
+    at scala.reflect.api.Trees$Traverser.apply (Trees.scala:2513)
+    at xsbt.API$ApiPhase.processScalaUnit (API.scala:43)
+    at xsbt.API$ApiPhase.processUnit (API.scala:35)
+    at xsbt.API$ApiPhase.apply (API.scala:33)
+    at scala.tools.nsc.Global$GlobalPhase.$anonfun$applyPhase$1 (Global.scala:402)
+    at scala.tools.nsc.Global$GlobalPhase.applyPhase (Global.scala:395)
+    at scala.tools.nsc.Global$GlobalPhase.$anonfun$run$1 (Global.scala:366)
+    at scala.tools.nsc.Global$GlobalPhase.$anonfun$run$1$adapted (Global.scala:366)
+    at scala.collection.AbstractIterator.foreach (Iterator.scala:932)
+    at scala.tools.nsc.Global$GlobalPhase.run (Global.scala:366)
+    at xsbt.API$ApiPhase.run (API.scala:27)
+    at scala.tools.nsc.Global$Run.compileUnitsInternal (Global.scala:1404)
+    at scala.tools.nsc.Global$Run.compileUnits (Global.scala:1389)
+    at scala.tools.nsc.Global$Run.compileSources (Global.scala:1384)
+    at scala.tools.nsc.Global$Run.compile (Global.scala:1478)
+    at xsbt.CachedCompiler0.run (CompilerInterface.scala:130)
+    at xsbt.CachedCompiler0.run (CompilerInterface.scala:105)
+    at xsbt.CompilerInterface.run (CompilerInterface.scala:31)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:498)
+    at sbt.internal.inc.AnalyzingCompiler.call (AnalyzingCompiler.scala:237)
+    at sbt.internal.inc.AnalyzingCompiler.compile (AnalyzingCompiler.scala:111)
+    at sbt.internal.inc.AnalyzingCompiler.compile (AnalyzingCompiler.scala:90)
+    at sbt.internal.inc.MixedAnalyzingCompiler.$anonfun$compile$3 (MixedAnalyzingCompiler.scala:82)
+    at scala.runtime.java8.JFunction0$mcV$sp.apply (JFunction0$mcV$sp.java:12)
+    at sbt.internal.inc.MixedAnalyzingCompiler.timed (MixedAnalyzingCompiler.scala:133)
+    at sbt.internal.inc.MixedAnalyzingCompiler.compileScala$1 (MixedAnalyzingCompiler.scala:73)
+    at sbt.internal.inc.MixedAnalyzingCompiler.compile (MixedAnalyzingCompiler.scala:116)
+    at sbt.internal.inc.IncrementalCompilerImpl.$anonfun$compileInternal$1 (IncrementalCompilerImpl.scala:307)
+    at sbt.internal.inc.IncrementalCompilerImpl.$anonfun$compileInternal$1$adapted (IncrementalCompilerImpl.scala:307)
+    at sbt.internal.inc.Incremental$.doCompile (Incremental.scala:106)
+    at sbt.internal.inc.Incremental$.$anonfun$compile$4 (Incremental.scala:87)
+    at sbt.internal.inc.IncrementalCommon.recompileClasses (IncrementalCommon.scala:116)
+    at sbt.internal.inc.IncrementalCommon.cycle (IncrementalCommon.scala:63)
+    at sbt.internal.inc.Incremental$.$anonfun$compile$3 (Incremental.scala:89)
+    at sbt.internal.inc.Incremental$.manageClassfiles (Incremental.scala:134)
+    at sbt.internal.inc.Incremental$.compile (Incremental.scala:80)
+    at sbt.internal.inc.IncrementalCompile$.apply (Compile.scala:67)
+    at sbt.internal.inc.IncrementalCompilerImpl.compileInternal (IncrementalCompilerImpl.scala:311)
+    at sbt.internal.inc.IncrementalCompilerImpl.$anonfun$compileIncrementally$1 (IncrementalCompilerImpl.scala:269)
+    at sbt.internal.inc.IncrementalCompilerImpl.handleCompilationError (IncrementalCompilerImpl.scala:159)
+    at sbt.internal.inc.IncrementalCompilerImpl.compileIncrementally (IncrementalCompilerImpl.scala:238)
+    at sbt.internal.inc.IncrementalCompilerImpl.compile (IncrementalCompilerImpl.scala:69)
+    at sbt_inc.SbtIncrementalCompiler.compile (SbtIncrementalCompiler.java:127)
+    at scala_maven.ScalaCompilerSupport.incrementalCompile (ScalaCompilerSupport.java:282)
+    at scala_maven.ScalaCompilerSupport.compile (ScalaCompilerSupport.java:100)
+    at scala_maven.ScalaCompilerSupport.doExecute (ScalaCompilerSupport.java:83)
+    at scala_maven.ScalaMojoSupport.execute (ScalaMojoSupport.java:554)
+    at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:137)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:210)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:156)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:148)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:117)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:81)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:56)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:128)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:305)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:192)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:956)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:288)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:192)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:498)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:289)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:229)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:415)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:356)
+```
