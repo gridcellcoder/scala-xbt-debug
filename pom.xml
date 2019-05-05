@@ -21,7 +21,7 @@
     <properties>
         <dependency.locations.enabled>false</dependency.locations.enabled>
         <scala.version>2.12</scala.version>
-        <scala.minor.version>2.12.0</scala.minor.version>
+        <scala.minor.version>2.12.8</scala.minor.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
