@@ -7,9 +7,12 @@ When running a simple `mvn clean package` with
 Gives an error...but *only* if Hello.scala is in a package. If it is under the scala folder (default package) this does not occur. For J9..
 
 ```
+Apache Maven 3.6.0 (97c98ec64a1fdfee7767ce5ffb20918da4f719f3; 2018-10-24T19:41:47+01:00)
 Maven home: /home/blah/tools/maven/apache-maven-3.6.0
-   Default locale: en_GB, platform encoding: UTF-8
-   OS name: "linux", version: "4.18.0-18-generic", arch: "amd64", family: "unix"
+Java version: 1.8.0_212, vendor: Eclipse OpenJ9, runtime: /home/blah/tools/java/jdk8u212-b03-j9/jre
+Default locale: en_GB, platform encoding: UTF-8
+OS name: "linux", version: "4.18.0-18-generic", arch: "amd64", family: "unix"
+
 ```
 ```
  at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:184)
